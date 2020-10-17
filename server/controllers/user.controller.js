@@ -3,6 +3,10 @@ const User = require('../models/user.model');
 const { verifiedAuth } = require('../midlewares/authToken.midleware');
 const ObjectId = mongoose.Types.ObjectId;
 const { createTokenAuth, verifiedToken } = require('../utils');
+//const Mail = '../utils/mail/mail.js';
+const nodemailer = require('@nodemailer/pro');
+
+const template = require('../utils/mail/templates/confirmacion');
 
 const readAll = async (req, res, next) =>{
     try{
@@ -54,9 +58,41 @@ const create = async (req, res, next) =>{
     try{
         const user = new User(req.body);
         const saveUser = await user.save(); 
-        
+        let obj = {
+            nombre : user.username, //Name
+            email : user.email, //Email
+            hash : '5887d4fc097486a5e9e3e23a', //Id Unico que permitira identificar al usuario
+        }
+        let transporter = nodemailer.createTransport({
+            service: 'gmail',
+            auth:{
+                user:'fullstacksodimac@gmail.com',
+                pass:'sodimac.,123'
+            },
+            tls: {rejectUnauthorized: false}
+        });
+        let mailOptions ={
+            from: `${obj.nombre}<${obj.email}>`,
+            to: `${obj.nombre}<${obj.email}>`,
+            subject: ' Registro OK ',
+            text: 'Registro OK',
+            html: template.emailConfirmacion(obj)
+        };
+        transporter.sendMail(mailOptions, function(error, info){
+            if(error){
+                return console.log(error);
+            }
+            console.log(`
+            INFORMACION: '
+            ID: ${info.messageId}, 
+            RESPONSE: ${info.response}`);
+        });
+       /*  console.log("intento correo");
+        console.log("user:",user);
+         Mail(user.username,user.email);
+        console.log("intento correo"); */
         res.status(201).json(saveUser)
-
+        
     }catch (error) {
         res.status(400).json({ error });
     }
@@ -98,7 +134,7 @@ const authLogin = async (req, res, next)=>{
             };
 
             const token = createTokenAuth(dataUser)
-            // console.log('--VALIDATE-TOKEN--', verifiedToken(token));
+             console.log('--VALIDATE-TOKEN--', verifiedToken(token));
 
             return res.status(200).json({ token: token})
 

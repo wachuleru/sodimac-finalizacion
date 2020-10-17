@@ -10,7 +10,7 @@ console.log('--props.history-', props.history)
                 title='404' 
                 description='Página no encontrada' 
             />
-            <button onClick={ () => props.history.push('/tareas') } >Ir a todas las  tareas</button>
+            <button onClick={ () => props.history.push('/') } >Ir a Inicio</button>
         </>
     )
 

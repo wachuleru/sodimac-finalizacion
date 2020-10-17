@@ -10,13 +10,13 @@ import Favorites from './view/Favorites.jsx';
 import { NotFound } from './view/NotFound';
 import Register from './view/Register';
 import Login from './view/Login';
-
+import ThemeProvider from './ThemProvider';
 
 const App = () => {
   
   return (
     <Container>
-      {/* <ThemeProvider> */}
+      <ThemeProvider>
 
         <BrowserRouter>
             <Row>
@@ -40,7 +40,7 @@ const App = () => {
           </Row>
         </BrowserRouter>
         
-      {/* </ThemeProvider> */}
+      </ThemeProvider>
     </Container>
   );
 }

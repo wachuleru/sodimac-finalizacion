@@ -5,6 +5,7 @@ const { verifiedToken } = require('../utils');
 const verifiedAuth = async (req, res, next) => {
 
     const authHeader = req.headers['authorization'];
+    console.log(req.headers);
     const token = authHeader && authHeader.split(' ')[1];
     if (token == null) return res.status(401).send({ message : 'Recurso no autorizado' });
 
