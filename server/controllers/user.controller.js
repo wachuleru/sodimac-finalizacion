@@ -2,7 +2,7 @@ const mongoose = require('mongoose');
 const User = require('../models/user.model');
 const { verifiedAuth } = require('../midlewares/authToken.midleware');
 const ObjectId = mongoose.Types.ObjectId;
-const { createTokenAuth, verifiedToken } = require('../utils');
+const { createTokenAuth, verifiedToken,verify } = require('../utils');
 //const Mail = '../utils/mail/mail.js';
 const nodemailer = require('@nodemailer/pro');
 
@@ -134,8 +134,8 @@ const authLogin = async (req, res, next)=>{
             };
 
             const token = createTokenAuth(dataUser)
-             console.log('--VALIDATE-TOKEN--', verifiedToken(token));
-
+             console.log('--VALIDATE-TOKEN authLogin--', verifiedToken(token));
+            console.log('---verify---',verify(token));
             return res.status(200).json({ token: token})
 
         }else{
@@ -151,7 +151,24 @@ const authLogin = async (req, res, next)=>{
     }
 }
 
+const updateFavorite = async (req, res, next) =>{
+    
+    try{
+        let id = {_id: ObjectId(req.body.id)};
+        let pokemon = {_id: ObjectId(req.body.pokemon)};
+        console.log("----------updateFavorite----------",req.body);
+        const updateFavorite = await User.updateOne(
+            {_id: id},
+            {$addToSet:{favorites: [pokemon]  }}            
+        );
 
+        //const updateFavorite = await User.update({_id: id}, req.body);
+        res.status(200).json(updateFavorite)
+
+    }catch (error) {
+        res.status(400).json({ error });
+    }
+}
 
 module.exports = {
     readAll,
@@ -159,5 +176,6 @@ module.exports = {
     create,
     updateOne,
     deleteOne,
-    authLogin
+    authLogin,
+    updateFavorite
 }

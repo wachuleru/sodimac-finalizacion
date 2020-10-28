@@ -45,6 +45,12 @@ const createTokenAuth = (data) => {
         { expiresIn: MAX_EXPIRE })
 }
 
+const verify= (token)=>{
+  const verified_token= jwt.verify(token,SECRET_JWT);
+  return verified_token;
+}
+
+
 const verifiedToken = (token)=> jwt.verify( token, SECRET_JWT, (err, decoded) => {      
         if (err) {
           return { status : false, objAuth: 'Invalid Token' };    
@@ -61,5 +67,6 @@ module.exports = {
     decryptText,
     createTokenAuth,
     verifiedToken,
-    API_PORT 
+    API_PORT,
+    verify
 }

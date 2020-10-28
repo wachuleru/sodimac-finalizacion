@@ -1,5 +1,7 @@
 const mongoose = require('mongoose');
+const User = require('../models/user.model');
 const Favorites = require('../models/favorites.model');
+const { find } = require('../models/user.model');
 //const { verifiedAuth } = require('../midlewares/authToken.midleware');
 const ObjectId = mongoose.Types.ObjectId;
 //const { createTokenAuth, verifiedToken } = require('../utils');
@@ -7,9 +9,11 @@ const ObjectId = mongoose.Types.ObjectId;
 const readAll = async (req, res, next) =>{
     try{
         let results = [];
-        let page = req.query.page;
-        let limit = req.query.limit;
-        let id = {_id: ObjectId(req.body.idUser)};
+        /* let page = req.query.page;
+        let limit = req.query.limit; */
+        //console.log("-body request-",req.body);
+        console.log("-header request-",req.headers.param);
+        let id = {_id: ObjectId(req.headers.param)};
         
         
         // let articles = await Article.findAll().paginate({page: page, limit: limit}).exec();
@@ -34,11 +38,21 @@ const readOne = async (req, res, next) =>{
 }
 const create = async (req, res, next) =>{
     try{
+        console.log("-body request-",req.body);
         let id = {_id: ObjectId(req.body.idUser)};
-        let fav ={idUser: id, pokeName: req.body.pokeName};
+        let fav ={idUser: id, pokeName: req.body.pokeName, url:req.body.url, idPokemon: req.body.idPokemon};
         const favorite = new Favorites(fav);
-        const saveFavorite = await favorite.save(); 
-        res.status(201).json(saveFavorite)
+        const saveFavorite = await favorite.save();
+        console.log("favorito creado:",saveFavorite);
+        const poke={_id: ObjectId(saveFavorite._id)};
+        console.log("idpokemon:",poke);
+        console.log("idUser",id._id);
+        const useFav= await User.updateOne(
+            {_id: id },
+            {$addToSet:{favorites: [poke]  }}            
+        );
+        console.log("intento insert usert",useFav);
+        res.status(201).json(saveFavorite);
 
     }catch (error) {
         res.status(400).json({ error });
@@ -47,6 +61,9 @@ const create = async (req, res, next) =>{
 const updateOne = async (req, res, next) =>{
     try{
         let id = {_id: ObjectId(req.params.id)};
+        User.updateOne(
+
+        );
         const updateFavorite = await User.update({_id: id}, req.body);
         res.status(200).json(updateFavorite)
 
@@ -56,9 +73,33 @@ const updateOne = async (req, res, next) =>{
 }
 const deleteOne = async (req, res, next) =>{
     try{
-        let id = {_id: ObjectId(req.params.id)};
-        const deleteFavorite = await Favorites.remove({_id: id});
-        res.status(200).json(deleteFavorite)
+        let id = {_id: ObjectId(req.body.idUser)};
+        console.log("-body request delete-",req.body);
+        
+        const deleteFavorite = await Favorites.remove({idUser : id,pokeName: req.body.pokeName});
+
+        console.log("favorito Eliminado:",deleteFavorite);
+        const findFav = await Favorites.find({idUser : id});
+        console.log("favoritos",(findFav));
+        const idFavs=[];
+        findFav.map((e)=>{
+            idFavs.push((e.id));
+        });
+        console.log("idsfavs",idFavs);
+        const poke={pokemones: ObjectId(findFav.id)};
+        
+        console.log("idPokemon:",poke);
+        //console.log("idUser",ObjectId(deleteFavorite._id));
+        const useFav= await User.updateOne(
+            {_id: id },
+            {$set: {favorites: {...idFavs}}}        
+        );
+        
+            //{ "$pullAll": { "favorites": {"pokemones": [ObjectId(deleteFavorite._id)]} } },
+        console.log("intento delete user",useFav);
+
+        res.status(200).json(useFav);
+        
 
     }catch (error) {
         res.status(400).json({ error });

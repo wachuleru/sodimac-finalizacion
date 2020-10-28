@@ -11,6 +11,7 @@ const PokemonsList = () =>{
 
         fetchPokemons().then((res) => {
             setpokemonList([...res.data.results]);
+            console.log([...res.data.results]);
         });
 
     }, []);

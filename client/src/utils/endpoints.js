@@ -12,6 +12,7 @@ export const POKEMON_DETAIL = (pokemonName) => `${POKEMONS}${pokemonName}/`;
 // Login
 export const LOGIN = `${API_MONGO}user/login/`;
 
+export const FAVORITES = `${API_MONGO}favorites/`;
 //register
 export const REGISTER = `${API_MONGO}user/`;
 

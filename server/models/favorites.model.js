@@ -14,6 +14,14 @@ const FavoritesSchema = mongoose.Schema({
     type: String,
     required: true
   },
+  url: {
+    type: String,
+    required: false
+  },
+  idPokemon: {
+    type: Number,
+    required: true
+  },
   createdAt: {
     type: Date,
     default: new Date(),

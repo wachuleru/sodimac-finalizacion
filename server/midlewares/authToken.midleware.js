@@ -1,5 +1,5 @@
 const jwt = require('jsonwebtoken');
-const { verifiedToken } = require('../utils');
+const { verifiedToken} = require('../utils');
 
 
 const verifiedAuth = async (req, res, next) => {
@@ -7,9 +7,11 @@ const verifiedAuth = async (req, res, next) => {
     const authHeader = req.headers['authorization'];
     console.log(req.headers);
     const token = authHeader && authHeader.split(' ')[1];
+    console.log("----verify tokeen-----","");
     if (token == null) return res.status(401).send({ message : 'Recurso no autorizado' });
 
     const dataJwt= verifiedToken(token);
+    
     if(dataJwt.status){
         next() // Continua con el flujo
     }else{

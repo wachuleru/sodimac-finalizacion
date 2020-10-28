@@ -7,7 +7,7 @@ router.get('/', favoriteCtrl.readAll);
 router.get('/:pokeName', favoriteCtrl.readOne);
 router.post('/', favoriteCtrl.create);
 router.put('/:id', favoriteCtrl.updateOne);
-router.delete('/:id', favoriteCtrl.deleteOne);
+router.delete('/', favoriteCtrl.deleteOne);
 
 
 module.exports = router

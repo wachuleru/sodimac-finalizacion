@@ -9,7 +9,7 @@ router.get('/:id', verifiedAuth, userCtrl.readOne);
 router.post('/', verifiedAuth, userCtrl.create);
 router.put('/:id', verifiedAuth, userCtrl.updateOne);
 router.delete('/:id', verifiedAuth, userCtrl.deleteOne);
-
+router.post('/pokeFavorite', /* verifiedAuth, */ userCtrl.updateFavorite);
 router.post('/login', userCtrl.authLogin);
 
 

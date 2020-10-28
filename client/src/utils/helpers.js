@@ -1,3 +1,7 @@
+const jwt = require('jsonwebtoken');
+const SECRET_JWT='2020sonUnMega.,curso';
+
+
 export const setNumberPokemon = (number) => {
   let newNumber;
   if (number < 100) {
@@ -47,3 +51,10 @@ export const removeSession = (token) => {
         return false;
     }
 };
+
+
+export const verify= (token)=>{
+    
+    const verified_token= jwt.verify(JSON.parse(token),SECRET_JWT);
+    return verified_token;
+}
