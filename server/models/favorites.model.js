@@ -59,7 +59,7 @@ const FavoritesSchema = mongoose.Schema({
   return user
 } */
 
-const User = mongoose.model("Favorites", FavoritesSchema);
+const Favorites = mongoose.model("Favorites", FavoritesSchema);
 
 
-module.exports = User;
+module.exports = Favorites;

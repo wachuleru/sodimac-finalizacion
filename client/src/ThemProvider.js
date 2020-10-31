@@ -1,21 +1,26 @@
-import React from 'react';
+import React,{useState} from 'react';
 import GlobarContext from './context';
+import {isActiveSession} from "./utils/helpers.js";
 
 class ThemeProvider extends React.Component{
     constructor(){
         super();
+        //const ses=isActiveSession();
+        //const [ses, setSes]=useState(isActiveSession());
+
+        /* const favs=[];
+        const body="";
+        if(ses){
+            fetchFavorites(body).then((res) => {
+                favs.concat([...res.data]);
+                console.log("res fetch favorites them:",res.data);
+                
+            });
+        }
+        console.log("favoritos desde themprovider",favs); */
         this.state={
-            todos:[
-                { task: 'tarea 1', user:'manu'},
-                { task: 'tarea 2', user:'manu'},
-                { task: 'tarea 3', user:'amilio'},
-                { task: 'tarea 4', user:'amilio'},
-                { task: 'tarea 5', user:'amilio'},
-                { task: 'tarea 6', user:'amilio'},
-                { task: 'tarea 7', user:'amilio'}
-            ],
-            addTask: (title)=>this.setState({todos: this.state.todos.concat(title)}),
-            removeTask: (taskId)=>this.setState({todos: this.state.todos.filter( item => item!== this.state.todos[taskId])})
+            ses:isActiveSession(),
+            actSes: ()=>this.setState({ses: isActiveSession()})
         }
 
        

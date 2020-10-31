@@ -7,7 +7,7 @@ const { createTokenAuth, verifiedToken,verify } = require('../utils');
 const nodemailer = require('@nodemailer/pro');
 
 const template = require('../utils/mail/templates/confirmacion');
-
+const Favorites = require('../models/favorites.model');
 const readAll = async (req, res, next) =>{
     try{
         let results = [];
@@ -47,7 +47,8 @@ const readAll = async (req, res, next) =>{
 const readOne = async (req, res, next) =>{
     try{
         let id = {_id: ObjectId(req.params.id)};
-        const user = await User.findById(id);
+        const user = await User.findById(id).populate('favorites._id');
+        console.log("user:",user);
         res.status(200).json(user)
 
     }catch (error) {
@@ -57,7 +58,9 @@ const readOne = async (req, res, next) =>{
 const create = async (req, res, next) =>{
     try{
         const user = new User(req.body);
+        console.log("body:",req.body);
         const saveUser = await user.save(); 
+        console.log("saveUser:",saveUser);
         let obj = {
             nombre : user.username, //Name
             email : user.email, //Email

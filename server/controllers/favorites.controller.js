@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 const User = require('../models/user.model');
 const Favorites = require('../models/favorites.model');
-const { find } = require('../models/user.model');
+//const { find } = require('../models/user.model');
 //const { verifiedAuth } = require('../midlewares/authToken.midleware');
 const ObjectId = mongoose.Types.ObjectId;
 //const { createTokenAuth, verifiedToken } = require('../utils');
@@ -9,20 +9,25 @@ const ObjectId = mongoose.Types.ObjectId;
 const readAll = async (req, res, next) =>{
     try{
         let results = [];
-        /* let page = req.query.page;
-        let limit = req.query.limit; */
-        //console.log("-body request-",req.body);
+  
         console.log("-header request-",req.headers.param);
         let id = {_id: ObjectId(req.headers.param)};
         
-        
-        // let articles = await Article.findAll().paginate({page: page, limit: limit}).exec();
-        // results = await User.find({}).paginate({page: page, limit: limit});
-        results = await Favorites.find({idUser : id});
-
-        res.status(200).json(results)
+        console.log("id:",id);
+     
+        //results = await Favorites.find({idUser : id});
+        results =await User.findById(id).populate('favorites._id').select('favorites');
+        console.log("res readAll:",results.favorites);
+        const ress=[];
+        results.favorites.map((f)=>{
+            //console.log("elemento:",f._id);
+            ress.push(f._id);
+        })
+        console.log("res;:",ress);
+        res.status(200).json(ress)
 
     }catch (error) {
+        console.log("error",error)
         res.status(400).json({ error: error });
     }
 }
@@ -79,20 +84,20 @@ const deleteOne = async (req, res, next) =>{
         const deleteFavorite = await Favorites.remove({idUser : id,pokeName: req.body.pokeName});
 
         console.log("favorito Eliminado:",deleteFavorite);
-        const findFav = await Favorites.find({idUser : id});
+        const findFav = await Favorites.find({idUser : id}).select('_id');
         console.log("favoritos",(findFav));
-        const idFavs=[];
+       /*  const idFavs=[];
         findFav.map((e)=>{
             idFavs.push((e.id));
         });
         console.log("idsfavs",idFavs);
         const poke={pokemones: ObjectId(findFav.id)};
         
-        console.log("idPokemon:",poke);
+        console.log("idPokemon:",poke); */
         //console.log("idUser",ObjectId(deleteFavorite._id));
         const useFav= await User.updateOne(
             {_id: id },
-            {$set: {favorites: {...idFavs}}}        
+            {$set: {favorites: [...findFav]}}        
         );
         
             //{ "$pullAll": { "favorites": {"pokemones": [ObjectId(deleteFavorite._id)]} } },

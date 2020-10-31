@@ -6,10 +6,10 @@ const { verifiedAuth } = require('../midlewares')
 // router.get('/', userCtrl.readAll);
 router.get('/', verifiedAuth, userCtrl.readAll);
 router.get('/:id', verifiedAuth, userCtrl.readOne);
-router.post('/', verifiedAuth, userCtrl.create);
+router.post('/', /* verifiedAuth, */ userCtrl.create);
 router.put('/:id', verifiedAuth, userCtrl.updateOne);
 router.delete('/:id', verifiedAuth, userCtrl.deleteOne);
-router.post('/pokeFavorite', /* verifiedAuth, */ userCtrl.updateFavorite);
+router.post('/pokeFavorite',  verifiedAuth,  userCtrl.updateFavorite);
 router.post('/login', userCtrl.authLogin);
 
 

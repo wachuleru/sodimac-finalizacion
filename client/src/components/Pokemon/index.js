@@ -20,8 +20,10 @@ import {
 
 
 export default function Pokemon({ find }) {
+  
   const [pokemon, setPokemon] = useState({});
   const ses=isActiveSession();
+  
   const deleteFavorite = (name)=>{
     let  p =window.confirm("Desea Eliminar a este "+name+" de sus favoritos?");
     console.log("borrando :",name);

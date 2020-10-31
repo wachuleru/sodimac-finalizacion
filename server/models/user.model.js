@@ -22,7 +22,7 @@ const UserSchema = mongoose.Schema({
   },
   favorites: [
     {
-      pokemones: { type: mongoose.Schema.Types.ObjectId, ref: "Favorites" },
+      _id: { type: mongoose.Schema.Types.ObjectId, ref: "Favorites" , required:false},
     },
   ],
   createdAt: {
